@@ -27,10 +27,6 @@ io.on('connection', function(socket){
 	  });
 	});
 
-
-
-
-
 	socket.on('disconnect', function(){
     		console.log('user disconnected');
 	});
@@ -42,17 +38,7 @@ io.on('connection', function(socket){
 
 	socket.on('cameraMessage', function(msg){
 		console.log('Camera Message: ' + msg);
-		if(msg == "Up"){
-			serialport.write('2~');
-		}
-		else if (msg == "Down"){
-			serialport.write('8~');
-		}
-		else if (msg == "Idle"){
-			serialport.write('5~');
-		}
-		
-		 
+		serialport.write(msg + '~');				 
 	});
 });
 
