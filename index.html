@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en-US">
+<html>
+  <head>
+	<Meta name="viewport" content="width=device-width, initial-scale=1">
+	<link type="text/css" rel="stylesheet" href="./CameraInterface.css" />
+	<title> The Spielmobile </title>
+  </head>
+  <body onkeydown="keyDownFunction()" onkeyup = "keyUpFunction()">
+
+
+  	<div id="outerContainer">
+		<img id="CameraFeed" src="http://192.168.0.31:8081/">
+		
+		<div id="CameraInfo">
+			<p> Camera Pitch: </p>
+			<p id="camPitch"> ##CamPitch## </p>
+			<p> Camera Yaw: </p>
+			<p id="camYaw"> ##CamYaw## </p>
+			<p> Current Command: </p>
+			<p id=camCommand> Idle </p>
+		</div>
+
+		<div id="messaging">
+			<ul id="messages"></ul>
+    		<form action="">
+      			<input id="m" autocomplete="off" /><button>Send</button>
+    		</form>
+		</div>
+	</div>
+
+    
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+		var socket = io();
+		var lastMessageSent = "";
+
+		function keyDownFunction() {
+    		 switch(event.keyCode){
+    		 	case 37: //Left
+    		 		document.getElementById("camCommand").innerHTML = "Left";
+				sendCameraMessage('Left');
+    		 		break;
+    		 	case 39: //Right
+    		 		document.getElementById("camCommand").innerHTML = "Right";
+				sendCameraMessage('Right');
+    		 		break;
+    		 	case 38: //Up
+    		 		document.getElementById("camCommand").innerHTML = "Up";
+				sendCameraMessage('Up');
+    		 		break;
+    		 	case 40: //Down
+    		 		document.getElementById("camCommand").innerHTML = "Down";
+				sendCameraMessage('Down');
+    		 		break;
+    		 	default:  
+    		 		break;
+    		 }
+		}
+
+		function keyUpFunction(){
+			document.getElementById("camCommand").innerHTML = "Idle";
+			sendCameraMessage('Idle');
+
+		}
+
+		function sendCameraMessage(camMsg){
+			if (camMsg != lastMessageSent){
+				lastMessageSent = camMsg;
+				socket.emit('cameraMessage', camMsg);
+			} 
+			return false;
+		}
+
+	  	$(function () {
+	    	$('form').submit(function(){
+	   			socket.emit('debugMessage', $('#m').val());
+	      		$('#m').val('');
+	      		return false;
+	    	});
+  		});
+	</script>
+  </body>
+</html>

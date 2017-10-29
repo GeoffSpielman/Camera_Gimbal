@@ -1,0 +1,44 @@
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+body{
+	background-color: black;
+	margin: 0;
+}
+
+
+#outerContainer{
+	display: flex;
+	height: 100%;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#CameraFeed{
+	flex-grow: 1;
+}
+
+#CameraInfo{
+	text-align: center;
+}
+
+#CameraInfo p{
+	color: green;
+	display: inline-block;
+	margin-top: 3px;
+}
+
+#camPitch{
+	margin-right: 20px;
+}
+
+#camYaw{
+	margin-right: 20px;
+}
+
+#messaging{
+	text-align: center;
+}
