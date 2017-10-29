@@ -5,8 +5,102 @@
 	<Meta name="viewport" content="width=device-width, initial-scale=1">
 	<link type="text/css" rel="stylesheet" href="./CameraInterface.css" />
 	<title> The Spielmobile </title>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+		var socket = io();
+		var lastMessageSent = "";
+		var keysDown = [0,0,0,0]; //up, left, down, right
+
+		function keyDownFunction() {
+    		 updateCameraCommand(event.keyCode, 1);
+		}
+
+		function keyUpFunction(){
+			updateCameraCommand(event.keyCode, 0);
+		}
+
+		function updateCameraCommand(recKeyCode, val){
+
+			switch(recKeyCode){
+    		 	case 37: //Left
+    		 		keysDown[1] = val;
+    		 		break;
+    		 	case 39: //Right
+    		 		keysDown[3] = val;
+    		 		break;
+    		 	case 38: //Up
+    		 		keysDown[0] = val;
+    		 		break;
+    		 	case 40: //Down
+	    		 	keysDown[2] = val;
+    		 		break;
+    		 	default:  
+    		 		break;
+    		 }
+
+    		 switch (keysDown.toString()){
+    		 	case "0,0,0,0":
+    		 		document.getElementById("camCommand").innerHTML = "Idle";
+    		 		sendCameraMessage('Idle');
+    		 		break;
+    		 	case "1,0,0,0":
+    		 		document.getElementById("camCommand").innerHTML = "Up";
+    		 		sendCameraMessage('Up');
+    		 		break;
+    		 	case "0,1,0,0":
+    		 		document.getElementById("camCommand").innerHTML = "Left";
+    		 		sendCameraMessage('Left');
+    		 		break;
+    		 	case "0,0,1,0":
+    		 		document.getElementById("camCommand").innerHTML = "Down";
+    		 		sendCameraMessage('Down');
+    		 		break;
+    		 	case "0,0,0,1":
+    		 		document.getElementById("camCommand").innerHTML = "Right";
+    		 		sendCameraMessage('Right');
+    		 		break;
+    		 	case "1,1,0,0":
+    		 		document.getElementById("camCommand").innerHTML = "Up-Left";
+    		 		sendCameraMessage('Up-Left');
+    		 		break;
+    		 	case "1,0,0,1":
+    		 		document.getElementById("camCommand").innerHTML = "Up-Right";
+    		 		sendCameraMessage('Up-Right');
+    		 		break;
+    		 	case "0,1,1,0":
+    		 		document.getElementById("camCommand").innerHTML = "Down-Left";
+    		 		sendCameraMessage('Down-Left');
+    		 		break;
+    		 	case "0,0,1,1":
+    		 		document.getElementById("camCommand").innerHTML = "Down-Right";
+    		 		sendCameraMessage('Down-Right');
+    		 		break;
+    		 	default:
+    		 		document.getElementById("camCommand").innerHTML = "Idle";
+    		 		sendCameraMessage('Idle');
+    		 		break;
+    		 }
+		}
+
+		function sendCameraMessage(camMsg){
+			if (camMsg != lastMessageSent){
+				lastMessageSent = camMsg;
+				socket.emit('cameraMessage', camMsg);
+			} 
+			return false;
+		}
+
+	  	$(function () {
+	    	$('form').submit(function(){
+	   			socket.emit('debugMessage', $('#m').val());
+	      		$('#m').val('');
+	      		return false;
+	    	});
+  		});
+	</script>
   </head>
-  <body onkeydown="keyDownFunction()" onkeyup = "keyUpFunction()">
+  <body onkeydown="keyDownFunction()" onkeyup="keyUpFunction()">
 
 
   	<div id="outerContainer">
@@ -31,56 +125,6 @@
 
     
 
-	<script src="/socket.io/socket.io.js"></script>
-	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-	<script>
-		var socket = io();
-		var lastMessageSent = "";
-
-		function keyDownFunction() {
-    		 switch(event.keyCode){
-    		 	case 37: //Left
-    		 		document.getElementById("camCommand").innerHTML = "Left";
-				sendCameraMessage('Left');
-    		 		break;
-    		 	case 39: //Right
-    		 		document.getElementById("camCommand").innerHTML = "Right";
-				sendCameraMessage('Right');
-    		 		break;
-    		 	case 38: //Up
-    		 		document.getElementById("camCommand").innerHTML = "Up";
-				sendCameraMessage('Up');
-    		 		break;
-    		 	case 40: //Down
-    		 		document.getElementById("camCommand").innerHTML = "Down";
-				sendCameraMessage('Down');
-    		 		break;
-    		 	default:  
-    		 		break;
-    		 }
-		}
-
-		function keyUpFunction(){
-			document.getElementById("camCommand").innerHTML = "Idle";
-			sendCameraMessage('Idle');
-
-		}
-
-		function sendCameraMessage(camMsg){
-			if (camMsg != lastMessageSent){
-				lastMessageSent = camMsg;
-				socket.emit('cameraMessage', camMsg);
-			} 
-			return false;
-		}
-
-	  	$(function () {
-	    	$('form').submit(function(){
-	   			socket.emit('debugMessage', $('#m').val());
-	      		$('#m').val('');
-	      		return false;
-	    	});
-  		});
-	</script>
+	
   </body>
 </html>
