@@ -13,7 +13,6 @@ app.get('/CameraInterface.css', function(req, res){
 
 
 io.on('connection', function(socket){
-	console.log('a user connected');
 	var client_ip_address = socket.request.connection.remoteAddress;
 	console.log('New connection from ' + client_ip_address);
 	
@@ -24,7 +23,9 @@ io.on('connection', function(socket){
 
 		serialport.on('data', function(data){
 		      console.log(data);
-	  });
+		      tempBuf = Buffer.from(data)
+		      console.log(tempBuf.toString('utf8'))
+	  	});
 	});
 
 	socket.on('disconnect', function(){
