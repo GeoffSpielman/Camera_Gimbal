@@ -17,17 +17,21 @@ io.on('connection', function(socket){
 	console.log('New connection from ' + client_ip_address);
 	
 	var SerialPort = require('serialport');
-	var serialport = new SerialPort('/dev/ttyACM0');
+	var serialport = new SerialPort('/dev/ttyACM0')
+	serialport.setEncoding('utf8');
+	var messageFromArduino = "";
+
 	serialport.on('open', function(){
 		console.log('Connected to Arduino via Serial Port');
 
-		serialport.on('data', function(data){
-		      console.log(data);
-		      tempBuf = Buffer.from(data)
-		      console.log(tempBuf.toString('utf8'))
-	  	});
+		serialport.on('data', function(data){	      
+			messageFromArduino += data;
+			if(messageFromArduino.includes("|")){
+				console.log(messageFromArduino.slice(0, messageFromArduino.indexOf("|")));
+				messageFromArduino = messageFromArduino.slice(messageFromArduino.indexOf("|")+1);	
+			}
+	  	})
 	});
-
 	socket.on('disconnect', function(){
     		console.log('user disconnected');
 	});

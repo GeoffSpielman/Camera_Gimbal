@@ -92,7 +92,7 @@ void loop() {
 
    //provide feedback to UI
    if (valuesHaveChanged){
-      Serial.println(String(curPitch) + "," + String(5));
+      Serial.println(String(curPitch) + "," + String(5) + "|");
       valuesHaveChanged = false;
    }
 }
