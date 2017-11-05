@@ -37,50 +37,50 @@
     		 		break;
     		 	default:  
     		 		break;
-    		 }
+    		 	}
 
-    		 switch (keysDown.toString()){
-    		 	case "0,0,0,0":
-    		 		document.getElementById("camCommand").innerHTML = "Idle";
-    		 		sendCameraMessage('Idle');
-    		 		break;
-    		 	case "1,0,0,0":
-    		 		document.getElementById("camCommand").innerHTML = "Up";
-    		 		sendCameraMessage('Up');
-    		 		break;
-    		 	case "0,1,0,0":
-    		 		document.getElementById("camCommand").innerHTML = "Left";
-    		 		sendCameraMessage('Left');
-    		 		break;
-    		 	case "0,0,1,0":
-    		 		document.getElementById("camCommand").innerHTML = "Down";
-    		 		sendCameraMessage('Down');
-    		 		break;
-    		 	case "0,0,0,1":
-    		 		document.getElementById("camCommand").innerHTML = "Right";
-    		 		sendCameraMessage('Right');
-    		 		break;
-    		 	case "1,1,0,0":
-    		 		document.getElementById("camCommand").innerHTML = "Up-Left";
-    		 		sendCameraMessage('Up-Left');
-    		 		break;
-    		 	case "1,0,0,1":
-    		 		document.getElementById("camCommand").innerHTML = "Up-Right";
-    		 		sendCameraMessage('Up-Right');
-    		 		break;
-    		 	case "0,1,1,0":
-    		 		document.getElementById("camCommand").innerHTML = "Down-Left";
-    		 		sendCameraMessage('Down-Left');
-    		 		break;
-    		 	case "0,0,1,1":
-    		 		document.getElementById("camCommand").innerHTML = "Down-Right";
-    		 		sendCameraMessage('Down-Right');
-    		 		break;
-    		 	default:
-    		 		document.getElementById("camCommand").innerHTML = "Idle";
-    		 		sendCameraMessage('Idle');
-    		 		break;
-    		 }
+	    		 switch (keysDown.toString()){
+	    		 	case "0,0,0,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Idle";
+	    		 		sendCameraMessage('Idle');
+	    		 		break;
+	    		 	case "1,0,0,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Up";
+	    		 		sendCameraMessage('Up');
+	    		 		break;
+	    		 	case "0,1,0,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Left";
+	    		 		sendCameraMessage('Left');
+	    		 		break;
+	    		 	case "0,0,1,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Down";
+	    		 		sendCameraMessage('Down');
+	    		 		break;
+	    		 	case "0,0,0,1":
+	    		 		document.getElementById("camCommand").innerHTML = "Right";
+	    		 		sendCameraMessage('Right');
+	    		 		break;
+	    		 	case "1,1,0,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Up-Left";
+	    		 		sendCameraMessage('Up-Left');
+	    		 		break;
+	    		 	case "1,0,0,1":
+	    		 		document.getElementById("camCommand").innerHTML = "Up-Right";
+	    		 		sendCameraMessage('Up-Right');
+	    		 		break;
+	    		 	case "0,1,1,0":
+	    		 		document.getElementById("camCommand").innerHTML = "Down-Left";
+	    		 		sendCameraMessage('Down-Left');
+	    		 		break;
+	    		 	case "0,0,1,1":
+	    		 		document.getElementById("camCommand").innerHTML = "Down-Right";
+	    		 		sendCameraMessage('Down-Right');
+	    		 		break;
+	    		 	default:
+	    		 		document.getElementById("camCommand").innerHTML = "Idle";
+	    		 		sendCameraMessage('Idle');
+	    		 		break;
+    		 	}	
 		}
 
 		function sendCameraMessage(camMsg){
@@ -92,12 +92,18 @@
 		}
 
 	  	$(function () {
-	    	$('form').submit(function(){
-	   			socket.emit('debugMessage', $('#m').val());
-	      		$('#m').val('');
-	      		return false;
-	    	});
+		    	$('form').submit(function(){
+		   		socket.emit('debugMessage', $('#m').val());
+		      		$('#m').val('');
+		      		return false;
+	    		});
   		});
+
+
+	socket.on('cameraValues', function(data){
+    		alert(data);
+	});
+
 	</script>
   </head>
   <body onkeydown="keyDownFunction()" onkeyup="keyUpFunction()">

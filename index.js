@@ -1,3 +1,4 @@
+
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -20,6 +21,7 @@ io.on('connection', function(socket){
 	var serialport = new SerialPort('/dev/ttyACM0')
 	serialport.setEncoding('utf8');
 	var messageFromArduino = "";
+	var cameraVals = "";
 
 	serialport.on('open', function(){
 		console.log('Connected to Arduino via Serial Port');
@@ -27,20 +29,22 @@ io.on('connection', function(socket){
 		serialport.on('data', function(data){	      
 			messageFromArduino += data;
 			if(messageFromArduino.includes("|")){
-				console.log(messageFromArduino.slice(0, messageFromArduino.indexOf("|")));
-				//check if anything came after the '|'
-				if(messageFromArduino.indexOf("|") == (messageFromAduino.length - 1)){
+				cameraVals = messageFromArduino.slice(0, messageFromArduino.indexOf("|")).trim();
+				console.log(cameraVals);
+				socket.emit('cameraValues', cameraVals);
+				//check if anything came javascafter the '|'
+				if(messageFromArduino.indexOf("|") === (messageFromArduino.length - 1)){
 					messageFromArduino = "";	
 				}
 				else{
-					messageFromArduino = messageFromArduino.slice(messageFromArduino.indexOf("|")+1);
+					messageFromArduino = messageFromArduino.slice(messageFromArduino.indexOf("|") + 1);
 				}
 			}
 	  	})
 	});
 	socket.on('disconnect', function(){
     		console.log('user disconnected');
-	});ras
+	});
 
 	socket.on('debugMessage', function(msg){
     		console.log('Debug Message: ' + msg);
