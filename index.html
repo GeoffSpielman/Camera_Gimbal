@@ -11,6 +11,7 @@
 		var socket = io();
 		var lastMessageSent = "";
 		var keysDown = [0,0,0,0]; //up, left, down, right
+		var pitchYaw = [0,0];
 
 		function keyDownFunction() {
     		 updateCameraCommand(event.keyCode, 1);
@@ -101,7 +102,9 @@
 
 
 	socket.on('cameraValues', function(data){
-    		alert(data);
+    		pitchYaw = data.split(",");
+    		document.getElementById("camPitch").innerHTML = pitchYaw[0];
+    		document.getElementById("camYaw").innerHTML = pitchYaw[1];
 	});
 
 	</script>
