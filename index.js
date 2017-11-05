@@ -28,13 +28,19 @@ io.on('connection', function(socket){
 			messageFromArduino += data;
 			if(messageFromArduino.includes("|")){
 				console.log(messageFromArduino.slice(0, messageFromArduino.indexOf("|")));
-				messageFromArduino = messageFromArduino.slice(messageFromArduino.indexOf("|")+1);	
+				//check if anything came after the '|'
+				if(messageFromArduino.indexOf("|") == (messageFromAduino.length - 1)){
+					messageFromArduino = "";	
+				}
+				else{
+					messageFromArduino = messageFromArduino.slice(messageFromArduino.indexOf("|")+1);
+				}
 			}
 	  	})
 	});
 	socket.on('disconnect', function(){
     		console.log('user disconnected');
-	});
+	});ras
 
 	socket.on('debugMessage', function(msg){
     		console.log('Debug Message: ' + msg);
