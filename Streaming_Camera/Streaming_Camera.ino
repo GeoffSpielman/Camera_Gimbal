@@ -8,7 +8,7 @@ const int MIN_PITCH = 760;
 const int REST_PITCH = 1430;
 const int INTERVAL_PITCH = 20;
 const int INCREMENT_PITCH = 1;
-const double PITCH_DEGREES_PER_MICROSECOND = 0.11;
+const double PITCH_DEGREES_PER_MILLISECOND = 0.11;
 int curPitch = 1430;
 
 //most constants are 'good to know' and for future use - not necessary right now
@@ -18,11 +18,12 @@ const int MAX_CW_YAW = 1380;
 const int MIN_CW_YAW = 1455;
 const int REST_YAW = 1480;
 const int INCREMENT_YAW = 8;
-const double YAW_DEGREES_PER_MICROSECOND = 0.005294;
+const double YAW_DEGREES_PER_MILLISECOND = 0.005294;
 int curYaw = 1480;
 unsigned long yawMotionTimeStart;
 double yawMotionValueStart;
 bool yawCurrentlySpinning = false;
+double yawCurrentHeading = 0;
 
 unsigned long lastPitchMove = millis();
 String recString = "";
@@ -75,11 +76,10 @@ void loop() {
             yawMotionTimeStart = millis();
             yawCurrentlySpinning = true;
         }
-        else{
+        else if (yawCurrentlySpinning){
             curYaw = REST_YAW;
             yawCurrentlySpinning = false;
-            //Yaw servo takes 34 seconds to complete 180° at the current speed (we'll need to recalibrate later)
-            yawMotionValueStart = (millis() - yawMotionTimeStart)*180/34000.0;
+            yawMotionValueStart = yawCurrentHeading;
         }
         yawServo.writeMicroseconds(curYaw);
         previousCameraCommand = cameraCommand;
@@ -89,14 +89,16 @@ void loop() {
    if (valuesHaveChanged || yawCurrentlySpinning){    
       //Right now 1430 seems level - I'll call that 0 degrees for now but we need to recalibrate later
       //Pitch servo: 0.079°/μsec according to data sheet
-      Serial.print((curPitch - 1430)*PITCH_DEGREES_PER_MICROSECOND, 4);
+      Serial.print((curPitch - 1430)*PITCH_DEGREES_PER_MILLISECOND, 4);
       Serial.print(",");
       if (yawCurrentlySpinning){
           if(curYaw == MIN_CCW_YAW + INCREMENT_YAW){
-            Serial.print(yawMotionValueStart + ((millis() - yawMotionTimeStart)*YAW_DEGREES_PER_MICROSECOND), 4);
+            yawCurrentHeading = yawMotionValueStart + ((millis() - yawMotionTimeStart)*YAW_DEGREES_PER_MILLISECOND);
+            Serial.print(yawCurrentHeading, 4);
           }
           else{
-            Serial.print(yawMotionValueStart - ((millis() - yawMotionTimeStart)*YAW_DEGREES_PER_MICROSECOND), 4);
+            yawCurrentHeading = yawMotionValueStart - ((millis() - yawMotionTimeStart)*YAW_DEGREES_PER_MILLISECOND);
+            Serial.print(yawCurrentHeading, 4);
           }
       }
       else{
